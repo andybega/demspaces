@@ -32,17 +32,19 @@ ds_logistic_reg <- function(space, data) {
   # before that for training
   train_data <- df %>%
     dplyr::filter(!is.na(df[[ynameup]]),
-                  !is.na(df[[ynamedown]]))
+                  !is.na(df[[ynamedown]])) %>%
+    dplyr::select(-.data$gwcode, -.data$year)
+
   train_data <- train_data %>%
     dplyr::filter(stats::complete.cases(.))
 
   updata <- train_data %>%
-    dplyr::select(-.data$gwcode, -.data$year, -dplyr::one_of(ynamedown))
+    dplyr::select(-dplyr::one_of(ynamedown))
   up_mdl <- logistic_reg(x = updata %>% dplyr::select(-dplyr::one_of(ynameup)),
                          y = updata[, ynameup])
 
   downdata <- train_data %>%
-    dplyr::select(-.data$gwcode, -.data$year, -dplyr::one_of(ynameup))
+    dplyr::select(-dplyr::one_of(ynameup))
   down_mdl <- logistic_reg(x = downdata %>% dplyr::select(-dplyr::one_of(ynamedown)),
                            y = downdata[, ynamedown])
 
