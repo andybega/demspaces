@@ -1,0 +1,57 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# demspaces
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+demspaces contains helper functions for the Closing Spaces project. 
+
+## Installation
+
+<!--
+You can install the released version of demspaces from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("demspaces")
+```
+-->
+
+Install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("andybega/demspaces")
+```
+
+## Example
+
+```{r}
+library("demspaces")
+
+data("states")
+
+mdl   <- ds_logistic_reg("v2x_veracc_osp", states)
+preds <- predict(mdl, new_data = states)
+head(preds)
+```
+
+## Meta
+
+There is a Makefile to help with stuff. E.g. to open that static docs:
+
+```bash
+make opendocs
+```

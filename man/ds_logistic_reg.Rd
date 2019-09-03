@@ -17,3 +17,10 @@ A data frame or similar object}
 Demonstrates the interface. Otherwise only difference is that it internally
 normalizes input data before fitting and predicting.
 }
+\examples{
+data("states")
+
+mdl <- ds_logistic_reg("v2x_veracc_osp", states)
+preds <- predict(mdl, new_data = states)
+
+}
