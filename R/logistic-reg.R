@@ -9,6 +9,12 @@
 #' @param data ([base::data.frame()])
 #'   A data frame or similar object
 #'
+#' @examples
+#' data("states")
+#'
+#' mdl <- ds_logistic_reg("v2x_veracc_osp", states)
+#' preds <- predict(mdl, new_data = states)
+#'
 #' @export
 ds_logistic_reg <- function(space, data) {
 
@@ -31,11 +37,12 @@ ds_logistic_reg <- function(space, data) {
     dplyr::filter(stats::complete.cases(.))
 
   updata <- train_data %>%
-    dplyr::select(.data$gwcode, -.data$year, -dplyr::one_of(ynamedown))
+    dplyr::select(-.data$gwcode, -.data$year, -dplyr::one_of(ynamedown))
   up_mdl <- logistic_reg(x = updata %>% dplyr::select(-dplyr::one_of(ynameup)),
                          y = updata[, ynameup])
 
-  downdata <- train_data[, setdiff(names(train_data), c("gwcode", "year", ynameup))]
+  downdata <- train_data %>%
+    dplyr::select(-.data$gwcode, -.data$year, -dplyr::one_of(ynameup))
   down_mdl <- logistic_reg(x = downdata %>% dplyr::select(-dplyr::one_of(ynamedown)),
                            y = downdata[, ynamedown])
 
@@ -58,14 +65,15 @@ predict.ds_logistic_reg <- function(object, new_data, ...) {
 
   p_up     <- predict(up_mdl,   new_data = new_data)[["p_1"]]
   p_down   <- predict(down_mdl, new_data = new_data)[["p_1"]]
+  p_same   <- 1 - p_up - p_down
 
   fcast <- data.frame(
     outcome   = yname,
-    from_year = unique(new_data$year),
-    for_years = paste0(unique(new_data$year) + c(1, 2), collapse = " - "),
+    from_year = new_data$year,
+    for_years = paste0(new_data$year + 1, " - ", new_data$year + 2),
     gwcode = new_data$gwcode,
     p_up   = p_up,
-    p_same = 1 - p_up - p_down,
+    p_same = p_same,
     p_down = p_down,
     stringsAsFactors = FALSE
   )
