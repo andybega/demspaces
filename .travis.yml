@@ -3,6 +3,10 @@
 language: R
 cache: packages
 
+# Code coverage report
+after_success:
+  - Rscript -e 'covr::codecov()'
+
 # Use Travis-CI to deploy static pages
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 deploy:
