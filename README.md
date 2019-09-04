@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![Travis build
-status](https://travis-ci.org/andybega/demspaces.svg?branch=master)](https://travis-ci.org/andybega/demspaces)
+status](https://travis-ci.com/andybega/demspaces.svg?branch=master)](https://travis-ci.com/andybega/demspaces)
 [![Codecov test
 coverage](https://codecov.io/gh/andybega/demspaces/branch/master/graph/badge.svg)](https://codecov.io/gh/andybega/demspaces?branch=master)
 <!-- badges: end -->
