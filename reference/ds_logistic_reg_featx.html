@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Logistic regression with PCA — logistic_reg_pca • demspaces</title>
+<title>Logistic regression with feature extraction — ds_logistic_reg_featx • demspaces</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,9 @@
 
 
 
-<meta property="og:title" content="Logistic regression with PCA — logistic_reg_pca" />
-<meta property="og:description" content="Standardized interface for logistic regression with PCA feature variable
-dimensionality reduction." />
+<meta property="og:title" content="Logistic regression with feature extraction — ds_logistic_reg_featx" />
+<meta property="og:description" content="Logistic regression with a feature extraction step applied to the training
+data, e.g. PCA." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,37 +104,39 @@ dimensionality reduction." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Logistic regression with PCA</h1>
+    <h1>Logistic regression with feature extraction</h1>
     
-    <div class="hidden name"><code>logistic_reg_pca.Rd</code></div>
+    <div class="hidden name"><code>ds_logistic_reg_featx.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Standardized interface for logistic regression with PCA feature variable
-dimensionality reduction.</p>
+    <p>Logistic regression with a feature extraction step applied to the training
+data, e.g. PCA.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>logistic_reg_pca</span>(<span class='no'>x</span>, <span class='no'>y</span>)</pre>
+    <pre class="usage"><span class='fu'>ds_logistic_reg_featx</span>(<span class='no'>space</span>, <span class='no'>data</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Data frame with features.</p></td>
+      <th>space</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
+Name of the V-Dem indicator for a democratic space</p></td>
     </tr>
     <tr>
-      <th>y</th>
-      <td><p>Binary vector indicating outcome event.</p></td>
+      <th>data</th>
+      <td><p>(<code><a href='https://rdrr.io/r/base/data.frame.html'>base::data.frame()</a></code>)
+A data frame or similar object</p></td>
     </tr>
     </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>credit_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>recipes</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/recipes/man/credit_data.html'>credit_data</a></span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
 
-<span class='co'>#mdl &lt;- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],</span>
-<span class='co'>#                     credit_data$Status)</span></div></pre>
+<span class='co'>#mdl &lt;- ds_logistic_reg_pca("v2x_veracc_osp", states)</span>
+<span class='co'>#preds &lt;- predict(mdl, new_data = states)</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

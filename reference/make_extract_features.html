@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Logistic regression with PCA filter — ds_logistic_reg_pca • demspaces</title>
+<title>Make feature extractor — make_extract_features • demspaces</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,8 @@
 
 
 
-<meta property="og:title" content="Logistic regression with PCA filter — ds_logistic_reg_pca" />
-<meta property="og:description" content="Logistic regression with a PCA pre-processing step to reduce feature
-dimensionality." />
+<meta property="og:title" content="Make feature extractor — make_extract_features" />
+<meta property="og:description" content="Creates a feature extractor function" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,39 +103,63 @@ dimensionality." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Logistic regression with PCA filter</h1>
+    <h1>Make feature extractor</h1>
     
-    <div class="hidden name"><code>ds_logistic_reg_pca.Rd</code></div>
+    <div class="hidden name"><code>make_extract_features.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Logistic regression with a PCA pre-processing step to reduce feature
-dimensionality.</p>
+    <p>Creates a feature extractor function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ds_logistic_reg_pca</span>(<span class='no'>space</span>, <span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>make_extract_features</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>space</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-Name of the V-Dem indicator for a democratic space</p></td>
-    </tr>
-    <tr>
-      <th>data</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/data.frame.html'>base::data.frame()</a></code>)
-A data frame or similar object</p></td>
+      <th>x</th>
+      <td><p>a <code><a href='https://rdrr.io/r/base/data.frame.html'>base::data.frame()</a></code> or similar object with only feature variables</p></td>
     </tr>
     </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"dplyr"</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='st'>"stats"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
 
-<span class='co'>#mdl &lt;- ds_logistic_reg_pca("v2x_veracc_osp", states)</span>
-<span class='co'>#preds &lt;- predict(mdl, new_data = states)</span></div></pre>
+<span class='co'># assume that the input consists entirely of features, and no NAs</span>
+<span class='no'>train_x</span> <span class='kw'>&lt;-</span> <span class='no'>states</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='no'>year</span> <span class='kw'>&lt;</span> <span class='fl'>2010</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>starts_with</a></span>(<span class='st'>"dv_"</span>), -<span class='no'>gwcode</span>, -<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases</a></span>(<span class='no'>.</span>))
+
+<span class='no'>test_x</span> <span class='kw'>&lt;-</span> <span class='no'>states</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='no'>year</span> <span class='kw'>&gt;</span> <span class='fl'>2009</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>starts_with</a></span>(<span class='st'>"dv_"</span>), -<span class='no'>gwcode</span>, -<span class='no'>year</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases</a></span>(<span class='no'>.</span>))
+
+<span class='no'>featx</span> <span class='kw'>&lt;-</span> <span class='fu'>make_extract_features</span>(<span class='no'>train_x</span>)
+<span class='fu'>featx</span>(<span class='no'>train_x</span>)</div><div class='output co'>#&gt; # A tibble: 6,122 x 5
+#&gt;      PC1    PC2     PC3    PC4      PC5
+#&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+#&gt;  1 -2.85 -0.220  0.0793 -0.627  0.0898 
+#&gt;  2 -2.72  0.741  0.275  -0.773 -0.161  
+#&gt;  3 -2.79  0.311  1.20    1.62   0.190  
+#&gt;  4 -2.88  0.267  1.28    1.58   0.0265 
+#&gt;  5 -2.93  0.366 -0.181  -0.456  0.0392 
+#&gt;  6 -2.90  0.613  1.15    1.65  -0.101  
+#&gt;  7 -2.99  0.413 -0.218  -0.432 -0.0317 
+#&gt;  8 -2.94  0.709 -0.188  -0.462 -0.00251
+#&gt;  9 -2.97  0.560 -0.176  -0.464  0.0605 
+#&gt; 10 -2.98  0.568 -0.170  -0.469  0.0583 
+#&gt; # … with 6,112 more rows</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
