@@ -23,15 +23,7 @@ demspaces contains helper functions for the Closing Spaces project.
 
 ## Installation
 
-<!--
-You can install the released version of demspaces from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("demspaces")
-```
--->
-
-Install the development version from [GitHub](https://github.com/) with:
+Since this package is specific to the democratic spaces project, it will not end up on CRAN. Install from [GitHub](https://github.com/) instead, with:
 
 ``` r
 # install.packages("remotes")
