@@ -20,7 +20,7 @@ data, e.g. PCA.
 \examples{
 data("states")
 
-#mdl <- ds_logistic_reg_pca("v2x_veracc_osp", states)
-#preds <- predict(mdl, new_data = states)
+mdl   <- ds_logistic_reg_featx("v2x_veracc_osp", states)
+preds <- predict(mdl, new_data = states)
 
 }

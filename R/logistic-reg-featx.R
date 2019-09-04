@@ -12,19 +12,73 @@
 #' @examples
 #' data("states")
 #'
-#' #mdl <- ds_logistic_reg_pca("v2x_veracc_osp", states)
-#' #preds <- predict(mdl, new_data = states)
+#' mdl   <- ds_logistic_reg_featx("v2x_veracc_osp", states)
+#' preds <- predict(mdl, new_data = states)
+#' preds
 #'
 #' @export
 ds_logistic_reg_featx <- function(space, data) {
 
+  full_data <- data
+  yname     <- space
+
+  # drop DV vars that we should exclude, except for our actual outcome pair
+  ynameup   <- paste0("dv_", yname, "_up_next2")
+  ynamedown <- paste0("dv_", yname, "_down_next2")
+
+  full_data <- full_data %>%
+    dplyr::select(-dplyr::starts_with("dv"), dplyr::one_of(c(ynameup, ynamedown)))
+
+  train_data <- full_data[setdiff(names(full_data), c("gwcode", "year"))]
+
+  # Prepare feature data
+  train_x     <- train_data[, setdiff(names(train_data), c(ynameup, ynamedown))]
+
+  # discard incomplete feature cases
+  keep_idx <- stats::complete.cases(train_x)
+  if (!all(keep_idx)) {
+    warning(sprintf("Discarding %s incomplete feature set cases",
+                    sum(!keep_idx)))
+    train_x    <- train_x[keep_idx, ]
+    train_data <- train_data[keep_idx, ]
+  }
+
+  # Check for missing values and subset;
+  # do this after make standardizer so that predict gives the same values as
+  # when identity standardizer is used (otherwise set difference gives small
+  # difference in mean and sd used for normalization, which leds to diffs
+  # in predicted probs)
+  if (any(is.na(full_data[, ynamedown]), is.na(full_data[, ynameup]))) {
+    warning(sprintf("Discarding %s incomplete outcome set cases",
+                    sum(!keep_idx)))
+
+    keep_idx <- stats::complete.cases(train_data)
+    train_data <- train_data[keep_idx, ]
+    train_x    <- train_x[keep_idx, ]
+
+  }
+
+  up_mdl   <- logistic_reg_featx(x = train_x, y = train_data[, ynameup])
+
+  down_mdl <- logistic_reg_featx(x = train_x, y = train_data[, ynamedown])
+
+  new_ds_logistic_reg_featx(up_mdl, down_mdl, standardize = identity, space)
+}
+
+#' Constructor
+#' @keywords internal
+new_ds_logistic_reg_featx <- function(up_mdl, down_mdl, standardize, yname) {
+
+  out <- new_ds_logistic_reg(up_mdl, down_mdl, standardize, yname)
+  class(out) <- c("ds_logistic_reg_featx", class(out))
+  out
 }
 
 
 #' @export
 #' @importFrom stats predict
 predict.ds_logistic_reg_featx <- function(object, new_data, ...) {
-
+  NextMethod()
 }
 
 #' Logistic regression with feature extraction

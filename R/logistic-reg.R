@@ -19,17 +19,17 @@
 #' @export
 ds_logistic_reg <- function(space, data, normalize = FALSE) {
 
-  df <- data
+  full_data <- data
   yname <- space
 
   # drop DV vars that we should exclude, except for our actual outcome pair
   ynameup   <- paste0("dv_", yname, "_up_next2")
   ynamedown <- paste0("dv_", yname, "_down_next2")
 
-  df <- df %>%
+  full_data <- full_data %>%
     dplyr::select(-dplyr::starts_with("dv"), dplyr::one_of(c(ynameup, ynamedown)))
 
-  train_data <- df[setdiff(names(df), c("gwcode", "year"))]
+  train_data <- full_data[setdiff(names(full_data), c("gwcode", "year"))]
 
   # Standardize feature data
   train_x     <- train_data[, setdiff(names(train_data), c(ynameup, ynamedown))]
@@ -54,7 +54,7 @@ ds_logistic_reg <- function(space, data, normalize = FALSE) {
   # when identity standardizer is used (otherwise set difference gives small
   # difference in mean and sd used for normalization, which leds to diffs
   # in predicted probs)
-  if (any(is.na(df[, ynamedown]), is.na(df[, ynameup]))) {
+  if (any(is.na(full_data[, ynamedown]), is.na(full_data[, ynameup]))) {
     warning(sprintf("Discarding %s incomplete outcome set cases",
                     sum(!keep_idx)))
 
@@ -68,13 +68,19 @@ ds_logistic_reg <- function(space, data, normalize = FALSE) {
 
   down_mdl <- logistic_reg(x = train_x, y = train_data[, ynamedown])
 
+  new_ds_logistic_reg(up_mdl, down_mdl, standardize, space)
+}
+
+#' Constructor
+#' @keywords internal
+new_ds_logistic_reg <- function(up_mdl, down_mdl, standardize, yname) {
   structure(
     list(
       up_mdl   = up_mdl,
       down_mdl = down_mdl,
       standardize = standardize
     ),
-    yname = space,
+    yname = yname,
     class = "ds_logistic_reg"
   )
 }
@@ -134,12 +140,18 @@ logistic_reg <- function(x, y) {
   }
   y   <- as.factor(y)
 
-  df  <- dplyr::bind_cols(`.y` = y, x)
-  fit <- stats::glm(.y ~ ., data = df, family = stats::binomial(link = "logit"))
+  train_data  <- dplyr::bind_cols(`.y` = y, x)
+  fit <- stats::glm(.y ~ ., data = train_data, family = stats::binomial(link = "logit"))
 
+  new_logistic_reg(fit, levels(y))
+}
+
+#' Constructor
+#' @keywords internal
+new_logistic_reg <- function(model, y_classes) {
   structure(
-    list(model = fit),
-    y_classes = levels(y),
+    list(model = model),
+    y_classes = y_classes,
     class = "logistic_reg"
   )
 }

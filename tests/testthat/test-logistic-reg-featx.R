@@ -44,3 +44,44 @@ test_that("predict.logistic_reg_featx works", {
   )
 
 })
+
+test_that("results differ from plain logistic_reg", {
+
+  mdl1 <- logistic_reg_featx(credit_features, credit_data$Status)
+  mdl2 <- logistic_reg(credit_features, credit_data$Status)
+
+  preds1 <- predict(mdl1, new_data = credit_data)
+  preds2 <- predict(mdl2, new_data = credit_data)
+
+  expect_true(all(head(preds1$p_good)!=head(preds2$p_good)))
+})
+
+
+test_that("ds_logistic_reg_featx work", {
+
+  data("states")
+  states <- states %>%
+    dplyr::filter(complete.cases(.))
+
+  expect_error(
+    mdl <- ds_logistic_reg_featx("v2x_veracc_osp", states),
+    NA
+  )
+
+
+})
+
+test_that("predict.ds_logistic_reg_featx works", {
+
+  data("states")
+  states <- states %>%
+    dplyr::filter(complete.cases(.))
+
+  mdl <- ds_logistic_reg("v2x_veracc_osp", states)
+
+  expect_error(
+    preds <- predict(mdl, new_data = states),
+    NA
+  )
+
+})
