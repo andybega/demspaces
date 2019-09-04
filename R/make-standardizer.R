@@ -53,15 +53,31 @@ make_standardizer <- function(x) {
 
   stopifnot(all(stats::complete.cases(x)))
 
+  sds <- sapply(x, sd)
+  if (any(sds==0)) {
+    stop("Constant value variables detected, cannnot normalize")
+  }
+
   bin_vars <- names(x)[sapply(x, is_binary_var)]
 
+  # Warning: All elements of `...` must be named.
+  # this is from https://github.com/tidymodels/recipes/pull/364
+  suppressWarnings({
   preproc <- recipes::recipe(x, formula = ~ .) %>%
     recipes::add_role(dplyr::one_of(bin_vars), new_role = "binary_predictor") %>%
     recipes::step_normalize(-recipes::has_role("binary_predictor"))
 
-  trained <- recipes::prep(preproc, training = x)
 
-  function(x) recipes::bake(trained, new_data = x)
+  trained <- recipes::prep(preproc, training = x)
+  })
+
+  function(x) {
+    # Warning: All elements of `...` must be named.
+    # this is from https://github.com/tidymodels/recipes/pull/364
+    suppressWarnings(
+      recipes::bake(trained, new_data = x)
+    )
+  }
 }
 
 # ID binary variables

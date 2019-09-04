@@ -93,22 +93,26 @@ install.packages("demspaces")
 <a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"states"</span>)</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">mdl   &lt;-<span class="st"> </span><span class="kw"><a href="reference/ds_logistic_reg.html">ds_logistic_reg</a></span>(<span class="st">"v2x_veracc_osp"</span>, states)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">preds &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mdl, <span class="dt">new_data =</span> states)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(preds)</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;          outcome from_year   for_years gwcode       p_up    p_same</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; 1 v2x_veracc_osp      1970 1971 - 1972      2 0.02847696 0.9609060</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; 2 v2x_veracc_osp      1971 1972 - 1973      2 0.02074426 0.9687526</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; 3 v2x_veracc_osp      1972 1973 - 1974      2 0.02582880 0.9616610</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; 4 v2x_veracc_osp      1973 1974 - 1975      2 0.02612461 0.9628875</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; 5 v2x_veracc_osp      1974 1975 - 1976      2 0.02514729 0.9648053</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; 6 v2x_veracc_osp      1975 1976 - 1977      2 0.02246814 0.9625945</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt;       p_down</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 1 0.01061705</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 2 0.01050317</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 3 0.01251021</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; 4 0.01098790</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; 5 0.01004742</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; 6 0.01493733</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; Warning in ds_logistic_reg("v2x_veracc_osp", states): Discarding 40</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; incomplete feature set cases</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; Warning in ds_logistic_reg("v2x_veracc_osp", states): Discarding 40</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; incomplete outcome set cases</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">preds &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(mdl, <span class="dt">new_data =</span> states)</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(preds)</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt;          outcome from_year   for_years gwcode       p_up    p_same</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; 1 v2x_veracc_osp      1970 1971 - 1972      2 0.02847696 0.9609060</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; 2 v2x_veracc_osp      1971 1972 - 1973      2 0.02074426 0.9687526</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 3 v2x_veracc_osp      1972 1973 - 1974      2 0.02582880 0.9616610</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; 4 v2x_veracc_osp      1973 1974 - 1975      2 0.02612461 0.9628875</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; 5 v2x_veracc_osp      1974 1975 - 1976      2 0.02514729 0.9648053</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; 6 v2x_veracc_osp      1975 1976 - 1977      2 0.02246814 0.9625945</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt;       p_down</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; 1 0.01061705</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; 2 0.01050317</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt; 3 0.01251021</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt; 4 0.01098790</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; 5 0.01004742</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; 6 0.01493733</span></a></code></pre></div>
 </div>
 <div id="meta" class="section level2">
 <h2 class="hasAnchor">

@@ -8,6 +8,7 @@
 #'   Name of the V-Dem indicator for a democratic space
 #' @param data ([base::data.frame()])
 #'   A data frame or similar object
+#' @param normalize Standardize data using [make_standardizer()]?
 #'
 #' @examples
 #' data("states")
@@ -16,7 +17,7 @@
 #' preds <- predict(mdl, new_data = states)
 #'
 #' @export
-ds_logistic_reg <- function(space, data) {
+ds_logistic_reg <- function(space, data, normalize = FALSE) {
 
   df <- data
   yname <- space
@@ -28,30 +29,51 @@ ds_logistic_reg <- function(space, data) {
   df <- df %>%
     dplyr::select(-dplyr::starts_with("dv"), dplyr::one_of(c(ynameup, ynamedown)))
 
-  # split the data; last year is reserved for forecast, use complete data
-  # before that for training
-  train_data <- df %>%
-    dplyr::filter(!is.na(df[[ynameup]]),
-                  !is.na(df[[ynamedown]])) %>%
-    dplyr::select(-.data$gwcode, -.data$year)
+  train_data <- df[setdiff(names(df), c("gwcode", "year"))]
 
-  train_data <- train_data %>%
-    dplyr::filter(stats::complete.cases(.))
+  # Standardize feature data
+  train_x     <- train_data[, setdiff(names(train_data), c(ynameup, ynamedown))]
 
-  updata <- train_data %>%
-    dplyr::select(-dplyr::one_of(ynamedown))
-  up_mdl <- logistic_reg(x = updata %>% dplyr::select(-dplyr::one_of(ynameup)),
-                         y = updata[, ynameup])
+  # discard incomplete feature cases
+  keep_idx <- stats::complete.cases(train_x)
+  if (!all(keep_idx)) {
+    warning(sprintf("Discarding %s incomplete feature set cases",
+                    sum(!keep_idx)))
+    train_x    <- train_x[keep_idx, ]
+    train_data <- train_data[keep_idx, ]
+  }
 
-  downdata <- train_data %>%
-    dplyr::select(-dplyr::one_of(ynameup))
-  down_mdl <- logistic_reg(x = downdata %>% dplyr::select(-dplyr::one_of(ynamedown)),
-                           y = downdata[, ynamedown])
+  standardize <- identity
+  if (isTRUE(normalize)) {
+    standardize <- make_standardizer(train_x)
+  }
+  train_x     <- standardize(train_x)
+
+  # Check for missing values and subset;
+  # do this after make standardizer so that predict gives the same values as
+  # when identity standardizer is used (otherwise set difference gives small
+  # difference in mean and sd used for normalization, which leds to diffs
+  # in predicted probs)
+  if (any(is.na(df[, ynamedown]), is.na(df[, ynameup]))) {
+    warning(sprintf("Discarding %s incomplete outcome set cases",
+                    sum(!keep_idx)))
+
+    keep_idx <- stats::complete.cases(train_data)
+    train_data <- train_data[keep_idx, ]
+    train_x    <- train_x[keep_idx, ]
+
+  }
+
+  up_mdl   <- logistic_reg(x = train_x, y = train_data[, ynameup])
+
+  down_mdl <- logistic_reg(x = train_x, y = train_data[, ynamedown])
 
   structure(
     list(
       up_mdl   = up_mdl,
-      down_mdl = down_mdl),
+      down_mdl = down_mdl,
+      standardize = standardize
+    ),
     yname = space,
     class = "ds_logistic_reg"
   )
@@ -61,9 +83,16 @@ ds_logistic_reg <- function(space, data) {
 #' @importFrom stats predict
 predict.ds_logistic_reg <- function(object, new_data, ...) {
 
+  if (any(!c("gwcode", "year") %in% names(new_data))) {
+    stop("'new_data' must contain 'gwcode' and 'year' columns")
+  }
+
   up_mdl   <- object$up_mdl
   down_mdl <- object$down_mdl
   yname    <- attr(object, "yname")
+
+  # Standardize data
+  x_data <- object$standardize(new_data)
 
   p_up     <- predict(up_mdl,   new_data = new_data)[["p_1"]]
   p_down   <- predict(down_mdl, new_data = new_data)[["p_1"]]

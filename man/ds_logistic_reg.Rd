@@ -4,7 +4,7 @@
 \alias{ds_logistic_reg}
 \title{Logistic regression}
 \usage{
-ds_logistic_reg(space, data)
+ds_logistic_reg(space, data, normalize = FALSE)
 }
 \arguments{
 \item{space}{(\code{character(1)}) \cr
