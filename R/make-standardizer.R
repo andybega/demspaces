@@ -53,7 +53,7 @@ make_standardizer <- function(x) {
 
   stopifnot(all(stats::complete.cases(x)))
 
-  sds <- sapply(x, sd)
+  sds <- sapply(x, stats::sd)
   if (any(sds==0)) {
     stop("Constant value variables detected, cannnot normalize")
   }

@@ -12,8 +12,8 @@
 #' @examples
 #' data("states")
 #'
-#' mdl <- ds_logistic_reg_pca("v2x_veracc_osp", states)
-#' preds <- predict(mdl, new_data = states)
+#' #mdl <- ds_logistic_reg_pca("v2x_veracc_osp", states)
+#' #preds <- predict(mdl, new_data = states)
 #'
 #' @export
 ds_logistic_reg_pca <- function(space, data) {
@@ -38,8 +38,8 @@ predict.ds_logistic_reg_pca <- function(object, new_data, ...) {
 #' @examples
 #' credit_data <- recipes::credit_data
 #'
-#' mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
-#'                     credit_data$Status)
+#' #mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
+#' #                     credit_data$Status)
 #'
 #' @export
 logistic_reg_pca <- function(x, y) {
