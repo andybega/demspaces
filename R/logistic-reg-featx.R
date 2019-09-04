@@ -45,9 +45,7 @@ ds_logistic_reg_featx <- function(space, data) {
 
   # Check for missing values and subset;
   # do this after make standardizer so that predict gives the same values as
-  # when identity standardizer is used (otherwise set difference gives small
-  # difference in mean and sd used for normalization, which leds to diffs
-  # in predicted probs)
+  # when identity standardizer is used
   if (any(is.na(full_data[, ynamedown]), is.na(full_data[, ynameup]))) {
     warning(sprintf("Discarding %s incomplete outcome set cases",
                     sum(!keep_idx)))

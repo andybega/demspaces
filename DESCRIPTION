@@ -24,5 +24,7 @@ Imports:
 Suggests: 
     covr,
     pkgdown,
-    testthat (>= 2.1.0)
-
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
