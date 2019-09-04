@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 # demspaces
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/andybega/demspaces.svg?branch=master)](https://travis-ci.org/andybega/demspaces)
 <!-- badges: end -->
 
 demspaces contains helper functions for the Closing Spaces project. 

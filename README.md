@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/andybega/demspaces.svg?branch=master)](https://travis-ci.org/andybega/demspaces)
 <!-- badges: end -->
 
 demspaces contains helper functions for the Closing Spaces project.
@@ -34,6 +36,10 @@ library("demspaces")
 data("states")
 
 mdl   <- ds_logistic_reg("v2x_veracc_osp", states)
+#> Warning in ds_logistic_reg("v2x_veracc_osp", states): Discarding 40
+#> incomplete feature set cases
+#> Warning in ds_logistic_reg("v2x_veracc_osp", states): Discarding 40
+#> incomplete outcome set cases
 preds <- predict(mdl, new_data = states)
 head(preds)
 #>          outcome from_year   for_years gwcode       p_up    p_same
