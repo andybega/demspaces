@@ -15,7 +15,7 @@
 #'
 #' mdl   <- ds_logistic_reg_featx("v2x_veracc_osp", states)
 #' preds <- predict(mdl, new_data = states)
-#' preds
+#' head(preds)
 #'
 #' @export
 ds_logistic_reg_featx <- function(space, data, n_comp = 5) {

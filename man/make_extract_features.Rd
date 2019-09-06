@@ -4,10 +4,12 @@
 \alias{make_extract_features}
 \title{Make feature extractor}
 \usage{
-make_extract_features(x)
+make_extract_features(x, n_comp = 5)
 }
 \arguments{
 \item{x}{a \code{\link[base:data.frame]{base::data.frame()}} or similar object with only feature variables}
+
+\item{n_comp}{the number of components to keep}
 }
 \description{
 Creates a feature extractor function

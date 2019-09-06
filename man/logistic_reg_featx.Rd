@@ -4,12 +4,14 @@
 \alias{logistic_reg_featx}
 \title{Logistic regression with feature extraction}
 \usage{
-logistic_reg_featx(x, y)
+logistic_reg_featx(x, y, n_comp = 5)
 }
 \arguments{
 \item{x}{Data frame with features.}
 
 \item{y}{Binary vector indicating outcome event.}
+
+\item{n_comp}{Number of components to keep.}
 }
 \description{
 Standardized interface for logistic regression with a feature extraction

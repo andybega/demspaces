@@ -4,7 +4,7 @@
 \alias{new_ds_logistic_reg_featx}
 \title{Constructor}
 \usage{
-new_ds_logistic_reg_featx(up_mdl, down_mdl, standardize, yname)
+new_ds_logistic_reg_featx(up_mdl, down_mdl, standardize, yname, n_comp)
 }
 \description{
 Constructor

@@ -4,7 +4,7 @@
 \alias{ds_logistic_reg_featx}
 \title{Logistic regression with feature extraction}
 \usage{
-ds_logistic_reg_featx(space, data)
+ds_logistic_reg_featx(space, data, n_comp = 5)
 }
 \arguments{
 \item{space}{(\code{character(1)}) \cr
@@ -12,6 +12,8 @@ Name of the V-Dem indicator for a democratic space}
 
 \item{data}{(\code{\link[base:data.frame]{base::data.frame()}})
 A data frame or similar object}
+
+\item{n_comp}{the number of components to keep}
 }
 \description{
 Logistic regression with a feature extraction step applied to the training
@@ -22,6 +24,6 @@ data("states")
 
 mdl   <- ds_logistic_reg_featx("v2x_veracc_osp", states)
 preds <- predict(mdl, new_data = states)
-preds
+head(preds)
 
 }
