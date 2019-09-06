@@ -8,6 +8,7 @@
 #'   Name of the V-Dem indicator for a democratic space
 #' @param data ([base::data.frame()])
 #'   A data frame or similar object
+#' @param n_comp the number of components to keep
 #'
 #' @examples
 #' data("states")
@@ -17,7 +18,7 @@
 #' preds
 #'
 #' @export
-ds_logistic_reg_featx <- function(space, data) {
+ds_logistic_reg_featx <- function(space, data, n_comp = 5) {
 
   full_data <- data
   yname     <- space
@@ -56,18 +57,21 @@ ds_logistic_reg_featx <- function(space, data) {
 
   }
 
-  up_mdl   <- logistic_reg_featx(x = train_x, y = train_data[, ynameup])
+  up_mdl   <- logistic_reg_featx(x = train_x, y = train_data[, ynameup], n_comp)
 
-  down_mdl <- logistic_reg_featx(x = train_x, y = train_data[, ynamedown])
+  down_mdl <- logistic_reg_featx(x = train_x, y = train_data[, ynamedown], n_comp)
 
-  new_ds_logistic_reg_featx(up_mdl, down_mdl, standardize = identity, space)
+  new_ds_logistic_reg_featx(up_mdl, down_mdl, standardize = identity, space,
+                            n_comp)
 }
 
 #' Constructor
 #' @keywords internal
-new_ds_logistic_reg_featx <- function(up_mdl, down_mdl, standardize, yname) {
+new_ds_logistic_reg_featx <- function(up_mdl, down_mdl, standardize, yname,
+                                      n_comp) {
 
   out <- new_ds_logistic_reg(up_mdl, down_mdl, standardize, yname)
+  attr(out, "n_comp") <- n_comp
   class(out) <- c("ds_logistic_reg_featx", class(out))
   out
 }
@@ -86,6 +90,7 @@ predict.ds_logistic_reg_featx <- function(object, new_data, ...) {
 #'
 #' @param x Data frame with features.
 #' @param y Binary vector indicating outcome event.
+#' @param n_comp Number of components to keep.
 #'
 #' @examples
 #' credit_data <- recipes::credit_data
@@ -96,12 +101,12 @@ predict.ds_logistic_reg_featx <- function(object, new_data, ...) {
 #'   credit_data$Status)
 #'
 #' @export
-logistic_reg_featx <- function(x, y) {
+logistic_reg_featx <- function(x, y, n_comp = 5) {
 
   stopifnot(all(stats::complete.cases(x)),
             all(!is.na(y)))
 
-  extract_features <- make_extract_features(x)
+  extract_features <- make_extract_features(x, n_comp)
 
   x_new <- extract_features(x)
 
@@ -116,6 +121,7 @@ logistic_reg_featx <- function(x, y) {
 #' Creates a feature extractor function
 #'
 #' @param x a [base::data.frame()] or similar object with only feature variables
+#' @param n_comp the number of components to keep
 #'
 #' @examples
 #' library("dplyr")
@@ -137,11 +143,11 @@ logistic_reg_featx <- function(x, y) {
 #' featx(train_x)
 #'
 #' @export
-make_extract_features <- function(x) {
+make_extract_features <- function(x, n_comp = 5) {
 
   featx <- recipes::recipe( ~ ., data = x) %>%
     recipes::step_normalize(recipes::all_numeric()) %>%
-    recipes::step_pca(recipes::all_numeric())
+    recipes::step_pca(recipes::all_numeric(), num_comp = n_comp)
   # we want to fit the PCA parameters using the x data, and re-use it later
   # for prediction
   # Warning: All elements of `...` must be named.
