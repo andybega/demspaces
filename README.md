@@ -11,7 +11,10 @@ status](https://travis-ci.com/andybega/demspaces.svg?branch=master)](https://tra
 coverage](https://codecov.io/gh/andybega/demspaces/branch/master/graph/badge.svg)](https://codecov.io/gh/andybega/demspaces?branch=master)
 <!-- badges: end -->
 
-demspaces contains helper functions for the Closing Spaces project.
+demspaces contains helper functions for the Closing Spaces project. See
+also the
+[andybega/closing-spaces](https://github.com/andybega/closing-spaces)
+repo.
 
 ## Installation
 
