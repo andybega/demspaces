@@ -8,5 +8,8 @@
 ^pkgdown$
 ^README\.Rmd$
 ^\.travis\.yml$
-docs
 ^codecov\.yml$
+^man-roxygen$
+
+# helper script for adding new models
+^add_new_model.R$
