@@ -1,7 +1,7 @@
 
 spaces <- tibble::tribble(
   ~Space, ~Indicator, ~Description,
-  "Electoral",     "v2x_veracc_ops", "Vertical accountability index",
+  "Electoral",     "v2x_veracc_osp", "Vertical accountability index",
   "Associational", "v2xcs_ccsi", "",
   "Individual",    "v2xcl_rol", "Rule of law index",
   "Informational", "v2x_freexp_altinf", "",
