@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • demspaces</title>
+<title>Score forecasts — score_ds_fcast • demspaces</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,9 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Score forecasts — score_ds_fcast" />
+<meta property="og:description" content="Score forecasts" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -113,17 +115,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Score forecasts</h1>
+    
+    <div class="hidden name"><code>score_ds_fcast.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="model-api.html">Model API</a></li>
-      </ul>
+    <div class="ref-description">
+    <p>Score forecasts</p>
     </div>
+
+    <pre class="usage"><span class='fu'>score_ds_fcast</span>(<span class='no'>x</span>, <span class='no'>truth_data</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p><code>ds_fcast()</code></p></td>
+    </tr>
+    <tr>
+      <th>truth_data</th>
+      <td><p>states data</p></td>
+    </tr>
+    </table>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
+
+<span class='no'>mdl</span> <span class='kw'>&lt;-</span> <span class='fu'>ds_logistic_reg</span>(<span class='st'>"v2x_veracc_osp"</span>, <span class='no'>states</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete feature set cases</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete outcome set cases</span></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>states</span>)
+<span class='no'>fcasts</span> <span class='kw'>&lt;-</span> <span class='fu'>ds_fcast</span>(<span class='no'>preds</span>)
+<span class='fu'>score_ds_fcast</span>(<span class='no'>fcasts</span>, <span class='no'>states</span>)</div><div class='output co'>#&gt; # A tibble: 4 x 3
+#&gt;   Measure Direction Value
+#&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;
+#&gt; 1 ROC-AUC up        0.779
+#&gt; 2 ROC-AUC down      0.763
+#&gt; 3 PR-AUC  up        0.284
+#&gt; 4 PR-AUC  down      0.249</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
   </div>
 </div>
 

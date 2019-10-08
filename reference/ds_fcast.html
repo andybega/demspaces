@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • demspaces</title>
+<title>ds_fcast constructor — ds_fcast • demspaces</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,9 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="ds_fcast constructor — ds_fcast" />
+<meta property="og:description" content="ds_fcast constructor" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -113,17 +115,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>ds_fcast constructor</h1>
+    
+    <div class="hidden name"><code>ds_fcast.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="model-api.html">Model API</a></li>
-      </ul>
+    <div class="ref-description">
+    <p>ds_fcast constructor</p>
     </div>
+
+    <pre class="usage"><span class='fu'>ds_fcast</span>(<span class='no'>x</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>a data frame of forecasts</p></td>
+    </tr>
+    </table>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
+
+<span class='no'>mdl</span> <span class='kw'>&lt;-</span> <span class='fu'>ds_logistic_reg</span>(<span class='st'>"v2x_veracc_osp"</span>, <span class='no'>states</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete feature set cases</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete outcome set cases</span></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>states</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ds_fcast</span>(<span class='no'>preds</span>))</div><div class='output co'>#&gt;          outcome from_year   for_years gwcode       p_up    p_same     p_down
+#&gt; 1 v2x_veracc_osp      1970 1971 - 1972      2 0.02847696 0.9609060 0.01061705
+#&gt; 2 v2x_veracc_osp      1971 1972 - 1973      2 0.02074426 0.9687526 0.01050317
+#&gt; 3 v2x_veracc_osp      1972 1973 - 1974      2 0.02582880 0.9616610 0.01251021
+#&gt; 4 v2x_veracc_osp      1973 1974 - 1975      2 0.02612461 0.9628875 0.01098790
+#&gt; 5 v2x_veracc_osp      1974 1975 - 1976      2 0.02514729 0.9648053 0.01004742
+#&gt; 6 v2x_veracc_osp      1975 1976 - 1977      2 0.02246814 0.9625945 0.01493733</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
   </div>
 </div>
 
