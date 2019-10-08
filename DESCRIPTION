@@ -1,6 +1,6 @@
 Package: demspaces
 Title: Functions for the Democratic Spaces Project
-Version: 0.0.1.9002
+Version: 0.0.1.9003
 Authors@R: 
     person(given = "Andreas",
            family = "Beger",
@@ -20,7 +20,10 @@ Imports:
     recipes,
     magrittr,
     rlang,
-    tibble
+    tibble,
+    yardstick,
+    stringr,
+    tidyr
 Suggests: 
     covr,
     pkgdown,
