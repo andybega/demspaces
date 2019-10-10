@@ -29,5 +29,7 @@ Suggests:
     pkgdown,
     testthat (>= 2.1.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    glmnet,
+    ggplot2
 VignetteBuilder: knitr
