@@ -39,13 +39,13 @@ score_ds_fcast <- function(x, truth_data) {
 
   suppressWarnings({
   stats <- list(
-    "ROC-AUC up"   = x %>% yardstick::roc_auc(up, p_up) %>% `[[`(".estimate"),
-    "ROC-AUC down" = x %>% yardstick::roc_auc(down, p_down) %>% `[[`(".estimate"),
-    "PR-AUC up"    = x %>% yardstick::pr_auc(up, p_up) %>% `[[`(".estimate"),
-    "PR-AUC down"  = x %>% yardstick::pr_auc(down, p_down) %>% `[[`(".estimate")
+    "ROC-AUC up"   = yardstick::roc_auc_vec(x$up, x$p_up),
+    "ROC-AUC down" = yardstick::roc_auc_vec(x$down, x$p_down),
+    "PR-AUC up"    = yardstick::pr_auc_vec(x$up, x$p_up) ,
+    "PR-AUC down"  = yardstick::pr_auc_vec(x$down, x$p_down)
   ) %>% tibble::enframe(value = "Value") %>%
-    tidyr::unnest(Value) %>%
-    tidyr::separate(name, into = c("Measure", "Direction"), sep = " ")
+    tidyr::unnest(.data$Value) %>%
+    tidyr::separate(.data$name, into = c("Measure", "Direction"), sep = " ")
   })
   stats
 }
@@ -57,26 +57,27 @@ score_ds_fcast <- function(x, truth_data) {
 #' @param truth_data states data
 #'
 #' @export
+#' @importFrom rlang .data
 add_truth_data_ds_fcast <- function(x, truth_data) {
   stopifnot(inherits(x, "ds_fcast"))
 
   truth_data <- truth_data %>%
-    dplyr::select(gwcode, year, dplyr::ends_with("next2"))
+    dplyr::select(.data$gwcode, .data$year, dplyr::ends_with("next2"))
 
   truth_data <- truth_data %>%
-    tidyr::gather(var, value, -gwcode, -year) %>%
+    tidyr::gather(key = "var", value = "value", -.data$gwcode, -.data$year) %>%
     dplyr::mutate(change = dplyr::case_when(
-      stringr::str_detect(var, "\\_up\\_") ~ "up",
-      stringr::str_detect(var, "\\_down\\_") ~ "down",
+      stringr::str_detect(.data$var, "\\_up\\_") ~ "up",
+      stringr::str_detect(.data$var, "\\_down\\_") ~ "down",
       TRUE ~ NA_character_
     )) %>%
-    dplyr::mutate(var = stringr::str_replace(var, "dv\\_", ""),
-                  var = stringr::str_replace(var, "\\_(up|down)\\_next2", ""),
+    dplyr::mutate(var = stringr::str_replace(.data$var, "dv\\_", ""),
+                  var = stringr::str_replace(.data$var, "\\_(up|down)\\_next2", ""),
                   # yardstick requires factor labels
-                  value = factor(value, levels = c("1", "0")))
+                  value = factor(.data$value, levels = c("1", "0")))
 
   truth_data <- truth_data %>%
-    tidyr::spread(change, value)
+    tidyr::spread(.data$change, .data$value)
 
   xaug <- x %>%
     dplyr::left_join(truth_data, by = c("gwcode", "from_year" = "year", "outcome" = "var"))
