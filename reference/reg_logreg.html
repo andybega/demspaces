@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Logistic regression — ds_logistic_reg • demspaces</title>
+<title>Reguarized logistic regression — reg_logreg • demspaces</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,8 @@
 
 
 
-<meta property="og:title" content="Logistic regression — ds_logistic_reg" />
-<meta property="og:description" content="Demonstrates the interface. Otherwise only difference is that it internally
-normalizes input data before fitting and predicting." />
+<meta property="og:title" content="Reguarized logistic regression — reg_logreg" />
+<meta property="og:description" content="Standardized interface for self-tuning regularized logistic regression." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,47 +115,71 @@ normalizes input data before fitting and predicting." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Logistic regression</h1>
+    <h1>Reguarized logistic regression</h1>
     
-    <div class="hidden name"><code>ds_logistic_reg.Rd</code></div>
+    <div class="hidden name"><code>reg_logreg.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Demonstrates the interface. Otherwise only difference is that it internally
-normalizes input data before fitting and predicting.</p>
+    <p>Standardized interface for self-tuning regularized logistic regression.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ds_logistic_reg</span>(<span class='no'>space</span>, <span class='no'>data</span>, <span class='kw'>normalize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>reg_logreg</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>alpha_n</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>space</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/character.html'>character(1)</a></code>) <br />
-Name of the V-Dem indicator for a democratic space</p></td>
+      <th>x</th>
+      <td><p>Data frame with features.</p></td>
     </tr>
     <tr>
-      <th>data</th>
-      <td><p>(<code><a href='https://rdrr.io/r/base/data.frame.html'>base::data.frame()</a></code>)
-A data frame or similar object</p></td>
+      <th>y</th>
+      <td><p>Binary vector indicating outcome event.</p></td>
     </tr>
     <tr>
-      <th>normalize</th>
-      <td><p>Standardize data using <code>make_standardizer()</code>?</p></td>
+      <th>folds</th>
+      <td><p>Number of folds to use for CV tuning</p></td>
+    </tr>
+    <tr>
+      <th>alpha_n</th>
+      <td><p>Number of alpha values to sample for CV tuning</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Tuning is performed using cross-validation with <code><a href='https://rdrr.io/pkg/glmnet/man/cv.glmnet.html'>glmnet::cv.glmnet()</a></code>.
+Both lambda and alpha values are tuned. The lambda values are left to the
+model default and a uniform grid of alpha values is used. The lambda value
+is picked with <code><a href='https://rdrr.io/pkg/glmnet/man/cv.glmnet.html'>glmnet::cv.glmnet()</a></code>'s more robust 1se value (i.e. not the
+absolute minimum, but closest value within 1 SD of the minimum value). Then
+the globally optimum alpha value is picked.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"states"</span>)
+    <pre class="examples"><div class='input'><span class='no'>credit_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>recipes</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/recipes/man/credit_data.html'>credit_data</a></span>
+<span class='no'>credit_data</span> <span class='kw'>&lt;-</span> <span class='no'>credit_data</span>[<span class='fu'><a href='https://rdrr.io/r/stats/complete.cases.html'>complete.cases</a></span>(<span class='no'>credit_data</span>), ]
 
-<span class='no'>mdl</span> <span class='kw'>&lt;-</span> <span class='fu'>ds_logistic_reg</span>(<span class='st'>"v2x_veracc_osp"</span>, <span class='no'>states</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete feature set cases</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete outcome set cases</span></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>states</span>)</div></pre>
+<span class='no'>mdl</span> <span class='kw'>&lt;-</span> <span class='fu'>reg_logreg</span>(<span class='no'>credit_data</span>[, <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>credit_data</span>), <span class='st'>"Status"</span>)],
+                    <span class='no'>credit_data</span>$<span class='no'>Status</span>,
+                    <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>alpha_n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>credit_data</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>preds</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 2
+#&gt;    p_bad p_good
+#&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+#&gt; 1 0.229   0.771
+#&gt; 2 0.105   0.895
+#&gt; 3 0.522   0.478
+#&gt; 4 0.237   0.763
+#&gt; 5 0.172   0.828
+#&gt; 6 0.0700  0.930</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
