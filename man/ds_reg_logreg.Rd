@@ -13,7 +13,7 @@ Name of the V-Dem indicator for a democratic space}
 \item{data}{(\code{\link[base:data.frame]{base::data.frame()}})
 A data frame or similar object}
 
-\item{dots}{document other arguments}
+\item{...}{document other arguments}
 }
 \description{
 Demonstrates the interface. Otherwise only difference is that it internally
@@ -22,7 +22,7 @@ normalizes input data before fitting and predicting.
 \examples{
 data("states")
 
-mdl <- ds_logistic_reg("v2x_veracc_osp", states)
+mdl <- ds_reg_logreg("v2x_veracc_osp", states, alpha_n = 1)
 preds <- predict(mdl, new_data = states)
 
 }

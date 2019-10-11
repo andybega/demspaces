@@ -4,7 +4,7 @@
 \alias{new_ds_reg_logreg}
 \title{Constructor}
 \usage{
-new_ds_reg_logreg(..., yname)
+new_ds_reg_logreg(up_mdl, down_mdl, yname)
 }
 \description{
 Constructor
