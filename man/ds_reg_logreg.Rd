@@ -26,3 +26,9 @@ mdl <- ds_reg_logreg("v2x_veracc_osp", states, alpha_n = 1)
 preds <- predict(mdl, new_data = states)
 
 }
+\seealso{
+Other Other DS models: \code{\link{ds_logistic_reg_featx}},
+  \code{\link{ds_logistic_reg}}
+}
+\concept{Other DS models}
+\concept{ds_model}

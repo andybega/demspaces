@@ -18,6 +18,8 @@
 #' head(preds)
 #'
 #' @export
+#' @concept ds_model
+#' @family Other DS models
 ds_logistic_reg_featx <- function(space, data, n_comp = 5) {
 
   full_data <- data
@@ -101,6 +103,8 @@ predict.ds_logistic_reg_featx <- function(object, new_data, ...) {
 #'   credit_data$Status)
 #'
 #' @export
+#' @concept base_model
+#' @family Other base models
 logistic_reg_featx <- function(x, y, n_comp = 5) {
 
   stopifnot(all(stats::complete.cases(x)),

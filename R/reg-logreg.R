@@ -15,6 +15,8 @@
 #'
 #' @export
 #' @import stats
+#' @concept ds_model
+#' @family Other DS models
 ds_reg_logreg <- function(space, data, ...) {
 
   full_data <- data
@@ -125,11 +127,14 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #'
 #' mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],
 #'                     credit_data$Status,
-#'                     folds = 5, alpha_n = 1)
+#'                     folds = 5, alpha_n = 4)
+#' plot(mdl)
 #' preds <- predict(mdl, new_data = credit_data)
 #' head(preds)
 #'
 #' @export
+#' @concept base_model
+#' @family Other base models
 reg_logreg <- function(x, y, folds = 5, alpha_n = 3) {
 
   cv_k    <- folds

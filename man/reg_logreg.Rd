@@ -32,8 +32,15 @@ credit_data <- credit_data[complete.cases(credit_data), ]
 
 mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],
                     credit_data$Status,
-                    folds = 5, alpha_n = 1)
+                    folds = 5, alpha_n = 4)
+plot(mdl)
 preds <- predict(mdl, new_data = credit_data)
 head(preds)
 
 }
+\seealso{
+Other Other base models: \code{\link{logistic_reg_featx}},
+  \code{\link{logistic_reg}}
+}
+\concept{Other base models}
+\concept{base_model}

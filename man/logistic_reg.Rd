@@ -21,3 +21,9 @@ mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
                     credit_data$Status)
 
 }
+\seealso{
+Other Other base models: \code{\link{logistic_reg_featx}},
+  \code{\link{reg_logreg}}
+}
+\concept{Other base models}
+\concept{base_model}

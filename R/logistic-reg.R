@@ -17,6 +17,8 @@
 #' preds <- predict(mdl, new_data = states)
 #'
 #' @export
+#' @concept ds_model
+#' @family Other DS models
 ds_logistic_reg <- function(space, data, normalize = FALSE) {
 
   full_data <- data
@@ -133,6 +135,8 @@ predict.ds_logistic_reg <- function(object, new_data, ...) {
 #'                     credit_data$Status)
 #'
 #' @export
+#' @concept base_model
+#' @family Other base models
 logistic_reg <- function(x, y) {
 
   if (inherits(y, "data.frame")) {
