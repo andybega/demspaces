@@ -39,15 +39,27 @@ score_ds_fcast <- function(x, truth_data) {
 
   suppressWarnings({
   stats <- list(
-    "ROC-AUC up"   = yardstick::roc_auc_vec(x$up, x$p_up),
-    "ROC-AUC down" = yardstick::roc_auc_vec(x$down, x$p_down),
-    "PR-AUC up"    = yardstick::pr_auc_vec(x$up, x$p_up) ,
-    "PR-AUC down"  = yardstick::pr_auc_vec(x$down, x$p_down)
+    "ROC-AUC up"   = safe_roc_auc(x$up, x$p_up),
+    "ROC-AUC down" = safe_roc_auc(x$down, x$p_down),
+    "PR-AUC up"    = safe_roc_pr(x$up, x$p_up) ,
+    "PR-AUC down"  = safe_roc_pr(x$down, x$p_down)
   ) %>% tibble::enframe(value = "Value") %>%
     tidyr::unnest(.data$Value) %>%
     tidyr::separate(.data$name, into = c("Measure", "Direction"), sep = " ")
   })
   stats
+}
+
+safe_roc_auc <- function(y, phat) {
+  tryCatch({
+    yardstick::roc_auc_vec(y, phat)
+  }, error = function(e) NA_real_)
+}
+
+safe_roc_pr <- function(y, phat) {
+  tryCatch({
+    yardstick::pr_auc_vec(y, phat)
+  }, error = function(e) NA_real_)
 }
 
 
