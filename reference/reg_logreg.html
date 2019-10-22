@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">demspaces</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -124,7 +124,8 @@
     <p>Standardized interface for self-tuning regularized logistic regression.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>reg_logreg</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>alpha_n</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
+    <pre class="usage"><span class='fu'>reg_logreg</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>alpha_n</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>cost</span> <span class='kw'>=</span> <span class='st'>"mse"</span>,
+  <span class='kw'>lambda</span> <span class='kw'>=</span> <span class='st'>"1se"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,6 +145,14 @@
     <tr>
       <th>alpha_n</th>
       <td><p>Number of alpha values to sample for CV tuning</p></td>
+    </tr>
+    <tr>
+      <th>cost</th>
+      <td><p>Cost measure to use, see <code><a href='https://rdrr.io/pkg/glmnet/man/cv.glmnet.html'>glmnet::cv.glmnet()</a></code></p></td>
+    </tr>
+    <tr>
+      <th>lambda</th>
+      <td><p>Decision rule to pick lambda, one of "min", "1se", "0.5se"</p></td>
     </tr>
     </table>
 
