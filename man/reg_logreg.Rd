@@ -4,7 +4,8 @@
 \alias{reg_logreg}
 \title{Reguarized logistic regression}
 \usage{
-reg_logreg(x, y, folds = 5, alpha_n = 3)
+reg_logreg(x, y, folds = 5, alpha_n = 3, cost = "mse",
+  lambda = "1se")
 }
 \arguments{
 \item{x}{Data frame with features.}
@@ -14,6 +15,10 @@ reg_logreg(x, y, folds = 5, alpha_n = 3)
 \item{folds}{Number of folds to use for CV tuning}
 
 \item{alpha_n}{Number of alpha values to sample for CV tuning}
+
+\item{cost}{Cost measure to use, see \code{\link[glmnet:cv.glmnet]{glmnet::cv.glmnet()}}}
+
+\item{lambda}{Decision rule to pick lambda, one of "min", "1se", "0.5se"}
 }
 \description{
 Standardized interface for self-tuning regularized logistic regression.

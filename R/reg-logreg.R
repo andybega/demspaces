@@ -114,6 +114,7 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #' @param folds Number of folds to use for CV tuning
 #' @param alpha_n Number of alpha values to sample for CV tuning
 #' @param cost Cost measure to use, see [glmnet::cv.glmnet()]
+#' @param lambda Decision rule to pick lambda, one of "min", "1se", "0.5se"
 #'
 #' @details Tuning is performed using cross-validation with [glmnet::cv.glmnet()].
 #'   Both lambda and alpha values are tuned. The lambda values are left to the
@@ -136,10 +137,13 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #' @export
 #' @concept base_model
 #' @family Other base models
-reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse") {
+reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse", lambda = "1se") {
 
   cv_k    <- folds
   alpha_n <- alpha_n
+
+  stopifnot(lambda %in% c("min", "1se", "0.5se"))
+  lambda_rule <- paste0("lambda.", lambda)
 
   if (!requireNamespace("glmnet", quietly = TRUE)) {
     stop("Package \"glmnet\" needed for this function to work. Please install it.",
@@ -182,6 +186,21 @@ reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse") {
                                alpha = alpha[i],
                                family = "binomial", type.measure = cost)
     mdl_i$alpha <- alpha[i]
+
+    lambda <- mdl_i$lambda
+    cvm    <- mdl_i$cvm
+    if (cost=="auc") cvm = -cvm
+    cvsd   <- mdl_i$cvsd
+
+    cvmin = min(cvm, na.rm = TRUE)
+    idmin = cvm <= cvmin
+    lambda.min = max(lambda[idmin], na.rm = TRUE)
+    idmin = match(lambda.min, lambda)
+    semin = (cvm + 0.5*cvsd)[idmin]
+    idmin = cvm <= semin
+    lambda.0.5se = max(lambda[idmin], na.rm = TRUE)
+    mdl_i$lambda.0.5se <- lambda.0.5se
+
     cvmodel[[i]] <- mdl_i
   }
 
@@ -191,18 +210,18 @@ reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse") {
   })
   hp_grid <- dplyr::bind_rows(hp_grid)
 
-  l1se_grid <- tibble::tibble(
+  loptim_grid <- tibble::tibble(
     alpha = alpha,
-    lambda = sapply(cvmodel, function(mdl_i) mdl_i$lambda.1se)
+    lambda = sapply(cvmodel, `[[`, lambda_rule)
   )
-  l1se_grid <- dplyr::left_join(l1se_grid, hp_grid,
+  loptim_grid <- dplyr::left_join(loptim_grid, hp_grid,
                                 by = c("alpha" = "alpha", "lambda" = "lambda"))
 
   # pick the overall min value
   if (cost=="auc") {
-    tune_res <- as.list(l1se_grid[which.max(l1se_grid$cvm), ])
+    tune_res <- as.list(loptim_grid[which.max(loptim_grid$cvm), ])
   } else {
-    tune_res <- as.list(l1se_grid[which.min(l1se_grid$cvm), ])
+    tune_res <- as.list(loptim_grid[which.min(loptim_grid$cvm), ])
   }
 
   final_model <- glmnet::glmnet(y = y, x = X,
@@ -214,19 +233,19 @@ reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse") {
                  levels(y),
                  model_terms,
                  hp_grid,
-                 l1se_grid,
+                 loptim_grid,
                  tune_res)
 }
 
 #' Constructor
 #' @keywords internal
-new_reg_logreg <- function(model, y_classes, model_terms, hp_grid, l1se_grid, tune_res) {
+new_reg_logreg <- function(model, y_classes, model_terms, hp_grid, loptim_grid, tune_res) {
   structure(
     list(model = model,
          model_terms = model_terms,
          tune = list(
            hp_grid = hp_grid,
-           l1se_grid = l1se_grid,
+           loptim_grid = loptim_grid,
            tune_res = tune_res
          )),
     y_classes = y_classes,
@@ -245,7 +264,7 @@ new_reg_logreg <- function(model, y_classes, model_terms, hp_grid, l1se_grid, tu
 #' @importFrom graphics plot points text
 plot.reg_logreg <- function(x, base = FALSE, ...) {
   hp_grid   <- x$tune$hp_grid
-  l1se_grid <- x$tune$l1se_grid
+  loptim_grid <- x$tune$loptim_grid
   tune_res  <- x$tune$tune_res
 
   if (requireNamespace("ggplot2", quietly = TRUE) & isFALSE(base)) {
@@ -253,7 +272,7 @@ plot.reg_logreg <- function(x, base = FALSE, ...) {
       ggplot2::scale_x_log10() +
       ggplot2::geom_point(ggplot2::aes(x = .data$lambda, y = .data$alpha,
                                        color = .data$cvm)) +
-      ggplot2::geom_point(data = l1se_grid,
+      ggplot2::geom_point(data = loptim_grid,
                          ggplot2::aes(x = .data$lambda, y = .data$alpha),
                          shape = 3, size = 3, color = "red") +
       ggplot2::geom_point(data = tibble::as_tibble(tune_res),
@@ -275,7 +294,7 @@ plot.reg_logreg <- function(x, base = FALSE, ...) {
     cols <- cols[x]
     plot(log10(hp_grid$lambda), hp_grid$alpha, col = cols,
          xlab = "log10(lambda)", ylab = "alpha")
-    points(log10(l1se_grid$lambda), l1se_grid$alpha,
+    points(log10(loptim_grid$lambda), loptim_grid$alpha,
            pch = 3, cex = 1.5, col = "red")
     points(log10(tune_res$lambda), tune_res$alpha,
            pch = 19, cex = 1.5, col = "red")
