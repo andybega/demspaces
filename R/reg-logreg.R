@@ -113,6 +113,7 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #' @param y Binary vector indicating outcome event.
 #' @param folds Number of folds to use for CV tuning
 #' @param alpha_n Number of alpha values to sample for CV tuning
+#' @param cost Cost measure to use, see [glmnet::cv.glmnet()]
 #'
 #' @details Tuning is performed using cross-validation with [glmnet::cv.glmnet()].
 #'   Both lambda and alpha values are tuned. The lambda values are left to the
@@ -135,11 +136,10 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #' @export
 #' @concept base_model
 #' @family Other base models
-reg_logreg <- function(x, y, folds = 5, alpha_n = 3) {
+reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse") {
 
   cv_k    <- folds
   alpha_n <- alpha_n
-  cost = "mse"
 
   if (!requireNamespace("glmnet", quietly = TRUE)) {
     stop("Package \"glmnet\" needed for this function to work. Please install it.",
