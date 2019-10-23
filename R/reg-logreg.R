@@ -130,7 +130,10 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #' mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],
 #'                     credit_data$Status,
 #'                     folds = 5, alpha_n = 4)
+#' # plots to review tuning results
 #' plot(mdl)
+#' plot(mdl, "alpha")
+#' plot(mdl, "lambda")
 #' preds <- predict(mdl, new_data = credit_data)
 #' head(preds)
 #'
@@ -143,7 +146,7 @@ reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse", lambda = "1se
   alpha_n <- alpha_n
 
   stopifnot(lambda %in% c("min", "1se", "0.5se"))
-  lambda_rule <- paste0("lambda.", lambda)
+  lambda_rule <- lambda
 
   if (!requireNamespace("glmnet", quietly = TRUE)) {
     stop("Package \"glmnet\" needed for this function to work. Please install it.",
@@ -212,22 +215,36 @@ reg_logreg <- function(x, y, folds = 5, alpha_n = 3, cost = "mse", lambda = "1se
 
   loptim_grid <- tibble::tibble(
     alpha = alpha,
-    lambda = sapply(cvmodel, `[[`, lambda_rule)
+    lambda.min   = sapply(cvmodel, `[[`, "lambda.min"),
+    lambda.1se   = sapply(cvmodel, `[[`, "lambda.1se"),
+    lambda.0.5se = sapply(cvmodel, `[[`, "lambda.0.5se"),
   )
+  loptim_grid <- tidyr::pivot_longer(
+    loptim_grid, -"alpha",
+    names_to = "rule", names_pattern = "lambda\\.([a-z0-9\\.]+)",
+    values_to = "lambda")
   loptim_grid <- dplyr::left_join(loptim_grid, hp_grid,
                                 by = c("alpha" = "alpha", "lambda" = "lambda"))
 
-  # pick the overall min value
+  # Pick alpha value
+  # ID min value; if it is 1 or 0, try to move one closer to center
+  grid <- loptim_grid[loptim_grid$rule==lambda_rule, ]
   if (cost=="auc") {
-    tune_res <- as.list(loptim_grid[which.max(loptim_grid$cvm), ])
-  } else {
-    tune_res <- as.list(loptim_grid[which.min(loptim_grid$cvm), ])
+    grid$cvm <- -grid$cvm
   }
+  min_idx <- which.min(grid$cvm)
+  if (alpha_n > 2 & min_idx %in% c(1, alpha_n)) {
+    if (min_idx==1) idx <- min_idx + 1
+    if (min_idx==alpha_n) idx <- min_idx - 1
+  } else {
+    idx <- min_idx
+  }
+  alpha_pick  <- grid[idx, "alpha", drop = TRUE]
+  loptim_grid$pick <- as.integer(loptim_grid$alpha==alpha_pick &
+                                 loptim_grid$rule==lambda_rule)
+  tune_res <- as.list(loptim_grid[loptim_grid$pick==1, c("alpha", "lambda", "cvm")])
 
-  final_model <- glmnet::glmnet(y = y, x = X,
-                                family = "binomial",
-                                alpha = tune_res$alpha,
-                                lambda = tune_res$lambda)
+  final_model <- cvmodel[alpha==alpha_pick][[1]]$glmnet.fit
 
   new_reg_logreg(final_model,
                  levels(y),
@@ -256,51 +273,120 @@ new_reg_logreg <- function(model, y_classes, model_terms, hp_grid, loptim_grid, 
 #' Plot reg_logreg
 #'
 #' @param x see [reg_logreg()]
+#' @param type one of "grid", "lambda", "alpha"; see examples
 #' @param base use base plot, not ggplot2?
 #' @param ... not used
 #'
 #' @export
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics plot points text
-plot.reg_logreg <- function(x, base = FALSE, ...) {
+plot.reg_logreg <- function(x, type = NULL, base = FALSE, ...) {
   hp_grid   <- x$tune$hp_grid
   loptim_grid <- x$tune$loptim_grid
   tune_res  <- x$tune$tune_res
 
+  if (is.null(type)) type <- "grid"
+  stopifnot(type %in% c("grid", "alpha", "lambda"))
+
   if (requireNamespace("ggplot2", quietly = TRUE) & isFALSE(base)) {
-    p <- ggplot2::ggplot(hp_grid) +
-      ggplot2::scale_x_log10() +
-      ggplot2::geom_point(ggplot2::aes(x = .data$lambda, y = .data$alpha,
-                                       color = .data$cvm)) +
-      ggplot2::geom_point(data = loptim_grid,
-                         ggplot2::aes(x = .data$lambda, y = .data$alpha),
-                         shape = 3, size = 3, color = "red") +
-      ggplot2::geom_point(data = tibble::as_tibble(tune_res),
-                         ggplot2::aes(x = .data$lambda, y = .data$alpha),
-                         shape = 19, size = 3, color = "red") +
-      ggplot2::annotate("text", x = tune_res$lambda, y = tune_res$alpha,
-                       label = sprintf("CVM: %s", round(tune_res$cvm, 3)),
-                       hjust = -.2, vjust = -1) +
-      ggplot2::labs(x = "lambda", y = "alpha")
-    return(p)
+
+    if (type=="grid") {
+      p <- ggplot2::ggplot(hp_grid) +
+        ggplot2::scale_x_log10() +
+        ggplot2::geom_point(ggplot2::aes(x = .data$lambda, y = .data$alpha, color = .data$cvm)) +
+        ggplot2::scale_color_distiller("CVM", palette = "Spectral") +
+        ggplot2::geom_point(data = loptim_grid,
+                   ggplot2::aes(x = .data$lambda, y = .data$alpha, shape = .data$rule),
+                   size = 3, color = "red") +
+        ggplot2::scale_shape_manual(
+          "Lambda rule",
+          values = c("min" = 3, "0.5se" = 2, "1se" = 4)) +
+        ggplot2::geom_point(data = tibble::as_tibble(tune_res),
+                   ggplot2::aes(x = .data$lambda, y = .data$alpha),
+                   shape = 19, size = 3, color = "red") +
+        ggplot2::annotate("text", x = tune_res$lambda, y = tune_res$alpha,
+                          label = sprintf("CVM: %s", round(tune_res$cvm, 3)),
+                          hjust = -.2, vjust = -1) +
+        ggplot2::labs(x = "lambda", y = "alpha") +
+        ggplot2::theme_bw()
+      return(p)
+    }
+
+    if (type=="lambda") {
+      p <- ggplot2::ggplot(hp_grid) +
+        ggplot2::geom_line(ggplot2::aes(x = .data$lambda, y = .data$cvm,
+                      color = factor(.data$alpha)), alpha = 0.2) +
+        ggplot2::geom_point(ggplot2::aes(x = .data$lambda, y = .data$cvm,
+                       color = factor(.data$alpha))) +
+        ggplot2::scale_color_discrete("Alpha") +
+        ggplot2::scale_x_log10() +
+        ggplot2::geom_point(data = loptim_grid,
+                   ggplot2::aes(x = .data$lambda, y = .data$cvm, shape = .data$rule),
+                   size = 3, color = "red") +
+        ggplot2::scale_shape_manual(
+          "Lambda rule",
+          values = c("min" = 3, "0.5se" = 2, "1se" = 4)) +
+        ggplot2::labs(x = "Lambda", y = "CVM") +
+        ggplot2::geom_point(data = tibble::as_tibble(tune_res),
+                   ggplot2::aes(x = .data$lambda, y = .data$cvm),
+                   shape = 19, size = 3, color = "red") +
+        ggplot2::annotate("text", x = tune_res$lambda, y = tune_res$cvm,
+                          label = sprintf("CVM: %s", round(tune_res$cvm, 3)),
+                          hjust = 1.2, vjust = -1) +
+        ggplot2::theme_bw()
+      return(p)
+    }
+
+    if (type=="alpha") {
+      p <- ggplot2::ggplot(hp_grid) +
+        ggplot2::geom_point(ggplot2::aes(x = .data$alpha, y = .data$cvm, color = .data$lambda)) +
+        ggplot2::scale_color_distiller(
+          "Lambda", palette = "Spectral",
+          trans = "log",
+          labels = scales::number_format(accuracy = 0.001)) +
+        ggplot2::geom_point(data = loptim_grid,
+                   ggplot2::aes(x = .data$alpha, y = .data$cvm, shape = .data$rule),
+                   size = 3, color = "red") +
+        ggplot2::scale_shape_manual(
+          "Lambda rule",
+          values = c("min" = 3, "0.5se" = 2, "1se" = 4)) +
+        ggplot2::labs(x = "Alpha", y = "CVM") +
+        ggplot2::geom_point(data = tibble::as_tibble(tune_res),
+                   ggplot2::aes(x = .data$alpha, y = .data$cvm),
+                   shape = 19, size = 3, color = "red") +
+        ggplot2::annotate("text", x = tune_res$alpha, y = tune_res$cvm,
+                          label = sprintf("CVM: %s", round(tune_res$cvm, 3)),
+                          hjust = -.2, vjust = -1) +
+        ggplot2::theme_bw()
+      return(p)
+    }
+
+    stop("something went wrong")
+
   } else {
-    pal  <- colorRampPalette(grDevices::cm.colors(10))
-    cols <- pal(100)
-    x <- hp_grid$cvm
-    xmin <- min(x)
-    xmax <- max(x)
-    x <- (x - xmin)/(xmax - xmin) * 99 + 1
-    x <- round(x)
-    cols <- cols[x]
-    plot(log10(hp_grid$lambda), hp_grid$alpha, col = cols,
-         xlab = "log10(lambda)", ylab = "alpha")
-    points(log10(loptim_grid$lambda), loptim_grid$alpha,
-           pch = 3, cex = 1.5, col = "red")
-    points(log10(tune_res$lambda), tune_res$alpha,
-           pch = 19, cex = 1.5, col = "red")
-    text(x = log10(tune_res$lambda), y = tune_res$alpha,
-         labels = sprintf("CVM: %s", round(tune_res$cvm, 3)),
-         adj = c(-.2, -1))
+
+    if (type=="grid") {
+      pal  <- colorRampPalette(grDevices::cm.colors(10))
+      cols <- pal(100)
+      x <- hp_grid$cvm
+      xmin <- min(x)
+      xmax <- max(x)
+      x <- (x - xmin)/(xmax - xmin) * 99 + 1
+      x <- round(x)
+      cols <- cols[x]
+      plot(log10(hp_grid$lambda), hp_grid$alpha, col = cols,
+           xlab = "log10(lambda)", ylab = "alpha")
+      points(log10(loptim_grid$lambda), loptim_grid$alpha,
+             pch = 3, cex = 1.5, col = "red")
+      points(log10(tune_res$lambda), tune_res$alpha,
+             pch = 19, cex = 1.5, col = "red")
+      text(x = log10(tune_res$lambda), y = tune_res$alpha,
+           labels = sprintf("CVM: %s", round(tune_res$cvm, 3)),
+           adj = c(-.2, -1))
+      return(invisible(x))
+    }
+
+    stop("Only type = 'grid' is implemented for base")
 
   }
   invisible(x)
@@ -317,7 +403,8 @@ predict.reg_logreg <- function(object, new_data, ...) {
   idx = match(rownames(X), rownames(new_data))
 
   y_classes <- attr(object, "y_classes")
-  p <- predict(object$model, newx = X, type = "response")
+  p <- predict(object$model, newx = X, type = "response",
+               s = object$tune$tune_res$lambda)
   p <- p[, 1, drop = TRUE]
   preds <- tibble::tibble(
     p0 = rep(NA_real_, nrow(new_data)),

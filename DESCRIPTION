@@ -1,6 +1,6 @@
 Package: demspaces
 Title: Functions for the Democratic Spaces Project
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: 
     person(given = "Andreas",
            family = "Beger",
@@ -31,5 +31,6 @@ Suggests:
     knitr,
     rmarkdown,
     glmnet,
-    ggplot2
+    ggplot2,
+    scales
 VignetteBuilder: knitr

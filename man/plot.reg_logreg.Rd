@@ -4,10 +4,12 @@
 \alias{plot.reg_logreg}
 \title{Plot reg_logreg}
 \usage{
-\method{plot}{reg_logreg}(x, base = FALSE, ...)
+\method{plot}{reg_logreg}(x, type = NULL, base = FALSE, ...)
 }
 \arguments{
 \item{x}{see \code{\link[=reg_logreg]{reg_logreg()}}}
+
+\item{type}{one of "grid", "lambda", "alpha"; see examples}
 
 \item{base}{use base plot, not ggplot2?}
 

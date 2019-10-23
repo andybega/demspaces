@@ -38,7 +38,10 @@ credit_data <- credit_data[complete.cases(credit_data), ]
 mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],
                     credit_data$Status,
                     folds = 5, alpha_n = 4)
+# plots to review tuning results
 plot(mdl)
+plot(mdl, "alpha")
+plot(mdl, "lambda")
 preds <- predict(mdl, new_data = credit_data)
 head(preds)
 
