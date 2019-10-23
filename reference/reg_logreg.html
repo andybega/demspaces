@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">demspaces</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -176,7 +176,8 @@ the globally optimum alpha value is picked.</p>
 <span class='no'>mdl</span> <span class='kw'>&lt;-</span> <span class='fu'>reg_logreg</span>(<span class='no'>credit_data</span>[, <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>credit_data</span>), <span class='st'>"Status"</span>)],
                     <span class='no'>credit_data</span>$<span class='no'>Status</span>,
                     <span class='kw'>folds</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>alpha_n</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>mdl</span>)</div><div class='img'><img src='reg_logreg-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>credit_data</span>)
+<span class='co'># plots to review tuning results</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>mdl</span>)</div><div class='img'><img src='reg_logreg-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>mdl</span>, <span class='st'>"alpha"</span>)</div><div class='img'><img src='reg_logreg-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>mdl</span>, <span class='st'>"lambda"</span>)</div><div class='img'><img src='reg_logreg-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>credit_data</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>preds</span>)</div><div class='output co'>#&gt; # A tibble: 6 x 2
 #&gt;    p_bad p_good
 #&gt;    &lt;dbl&gt;  &lt;dbl&gt;
