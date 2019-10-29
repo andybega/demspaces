@@ -5,7 +5,7 @@
 #' normalizes input data before fitting and predicting.
 #'
 #' @template ds_model
-#' @param ... document other arguments
+#' @param ... other arguments passed to [ranger::ranger()]
 #'
 #' @examples
 #' data("states")
@@ -107,6 +107,7 @@ predict.ds_rf <- function(object, new_data, ...) {
 #'
 #' @param x Data frame with features.
 #' @param y Binary vector indicating outcome event.
+#' @param ... other arguments passed to [ranger::ranger()]
 #'
 #' @examples
 #' credit_data <- recipes::credit_data
@@ -116,7 +117,7 @@ predict.ds_rf <- function(object, new_data, ...) {
 #'           credit_data$Status)
 #'
 #' @export
-rf <- function(x, y) {
+rf <- function(x, y, ...) {
 
   if (!requireNamespace("ranger", quietly = TRUE)) {
     stop("Package \"ranger\" needed for this function to work. Please install it.",
@@ -140,7 +141,8 @@ rf <- function(x, y) {
   xy <- cbind(.yy = y, x)
   xy <- as.data.frame(xy)
 
-  mdl_i <- ranger::ranger(.yy ~ ., data = xy, probability = TRUE)
+  mdl_i <- ranger::ranger(.yy ~ ., data = xy, probability = TRUE,
+                          ...)
 
   fit <- mdl_i
   new_rf(fit, levels(y))

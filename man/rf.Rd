@@ -4,12 +4,14 @@
 \alias{rf}
 \title{Random forest}
 \usage{
-rf(x, y)
+rf(x, y, ...)
 }
 \arguments{
 \item{x}{Data frame with features.}
 
 \item{y}{Binary vector indicating outcome event.}
+
+\item{...}{other arguments passed to \code{\link[ranger:ranger]{ranger::ranger()}}}
 }
 \description{
 Standardized interface for ...

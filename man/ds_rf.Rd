@@ -13,7 +13,7 @@ Name of the V-Dem indicator for a democratic space}
 \item{data}{(\code{\link[base:data.frame]{base::data.frame()}})
 A data frame or similar object}
 
-\item{...}{document other arguments}
+\item{...}{other arguments passed to \code{\link[ranger:ranger]{ranger::ranger()}}}
 }
 \description{
 Demonstrates the interface. Otherwise only difference is that it internally
