@@ -157,12 +157,12 @@ A data frame or similar object</p></td>
 
 <span class='no'>mdl</span>   <span class='kw'>&lt;-</span> <span class='fu'>ds_logistic_reg_featx</span>(<span class='st'>"v2x_veracc_osp"</span>, <span class='no'>states</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete feature set cases</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Discarding 40 incomplete outcome set cases</span></div><div class='input'><span class='no'>preds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span>(<span class='no'>mdl</span>, <span class='kw'>new_data</span> <span class='kw'>=</span> <span class='no'>states</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>preds</span>)</div><div class='output co'>#&gt;          outcome from_year   for_years gwcode       p_up    p_same     p_down
-#&gt; 1 v2x_veracc_osp      1970 1971 - 1972      2 0.03055580 0.9486589 0.02078526
-#&gt; 2 v2x_veracc_osp      1971 1972 - 1973      2 0.02454189 0.9488074 0.02665076
-#&gt; 3 v2x_veracc_osp      1972 1973 - 1974      2 0.02630448 0.9430349 0.03066060
-#&gt; 4 v2x_veracc_osp      1973 1974 - 1975      2 0.02467062 0.9446053 0.03072406
-#&gt; 5 v2x_veracc_osp      1974 1975 - 1976      2 0.02578548 0.9484914 0.02572315
-#&gt; 6 v2x_veracc_osp      1975 1976 - 1977      2 0.02186146 0.9425096 0.03562896</div><div class='input'>
+#&gt; 1 v2x_veracc_osp      1970 1971 - 1972      2 0.03055580 0.9492941 0.02078526
+#&gt; 2 v2x_veracc_osp      1971 1972 - 1973      2 0.02454189 0.9494614 0.02665076
+#&gt; 3 v2x_veracc_osp      1972 1973 - 1974      2 0.02630448 0.9438414 0.03066060
+#&gt; 4 v2x_veracc_osp      1973 1974 - 1975      2 0.02467062 0.9453633 0.03072406
+#&gt; 5 v2x_veracc_osp      1974 1975 - 1976      2 0.02578548 0.9491546 0.02572315
+#&gt; 6 v2x_veracc_osp      1975 1976 - 1977      2 0.02186146 0.9432885 0.03562896</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
