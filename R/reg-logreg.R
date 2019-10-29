@@ -88,7 +88,7 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 
   p_up     <- predict(up_mdl,   new_data = new_data)[["p_1"]]
   p_down   <- predict(down_mdl, new_data = new_data)[["p_1"]]
-  p_same   <- 1 - p_up - p_down
+  p_same   <- (1 - p_up) * (1 - p_down)
 
   fcast <- data.frame(
     outcome   = yname,
