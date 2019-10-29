@@ -405,6 +405,9 @@ predict.reg_logreg <- function(object, new_data, ...) {
   y_classes <- attr(object, "y_classes")
   p <- predict(object$model, newx = X, type = "response",
                s = object$tune$tune_res$lambda)
+  # these probabilities are for the second class level
+  # from ?glmnet:
+  # for a factor, the last level in alphabetical order is the target class
   p <- p[, 1, drop = TRUE]
   preds <- tibble::tibble(
     p0 = rep(NA_real_, nrow(new_data)),

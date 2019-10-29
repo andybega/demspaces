@@ -10,8 +10,8 @@ library("usethis")
 # set these data components
 # the short name should avoid R namespace clashes, e.g. don't use "glmnet"
 # as one of the functions created will equal the short_name
-data <- list(name       = "Reguarized logistic regression",
-             short_name = "reg_logreg")
+data <- list(name       = "Random forest",
+             short_name = "rf")
 
 
 

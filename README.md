@@ -64,3 +64,6 @@ There is a Makefile to help with stuff. E.g. to open that static docs:
 ``` bash
 make opendocs
 ```
+
+To add new models, see the `add_new_model.R` script. It will use a
+template to setup the R and test files.
