@@ -13,3 +13,5 @@
 
 # helper script for adding new models
 ^add_new_model.R$
+
+^misc$
