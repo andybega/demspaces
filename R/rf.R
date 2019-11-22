@@ -51,10 +51,27 @@ ds_rf <- function(space, data, ...) {
 
   }
 
-  up_mdl   <- rf(x = train_x, y = train_data[, ynameup], ...)
-  down_mdl <- rf(x = train_x, y = train_data[, ynamedown], ...)
+  up_mdl   <- ds_rf_tuner(x = train_x, y = train_data[, ynameup], ...)
+  down_mdl <- ds_rf_tuner(x = train_x, y = train_data[, ynamedown], ...)
 
   new_ds_rf(up_mdl, down_mdl, space)
+}
+
+#' Wrapper to only tune mtry
+#' Based on tunerf results
+#' @keywords internal
+ds_rf_tuner <- function(x, y, ...) {
+  mtry_grid <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 100)
+
+  # cannot have mtry values greater than # of features
+  mtry_grid <- mtry_grid[mtry_grid < ncol(x)]
+  cost <- rep(NA_real_, length(mtry_grid))
+  for (i in seq_len(length(mtry_grid))) {
+    mdl <- rf(x, y, mtry = mtry_grid[i], ...)
+    cost[i] <- mdl$model$prediction.error
+  }
+  mtry_final <- mtry_grid[which.min(cost)]
+  rf(x, y, mtry = mtry_final, ...)
 }
 
 #' Constructor

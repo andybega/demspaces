@@ -1,4 +1,10 @@
-# demspaces 0.1.x
+# demspaces 0.2 
+
+Development in November 2019.
+
+* Added a tuner for `ds_rf()` that picks optimal `mtry` values. 
+
+# demspaces 0.1
 
 Development in October 2019. 
 

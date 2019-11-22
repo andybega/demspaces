@@ -17,12 +17,12 @@ num.trees.vals <- c(100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
 mtry.vals      <- c(2, 3, 4, 5, 6, 7, 10)
 min.node.size  <- c(1, 5, 10, 15)
 
-N <- 20
+TUNE_N <- 20
 
 tune_grid <- data.frame(
-  num.trees = sample(rep(num.trees.vals, length.out = N), size = N),
-  mtry      = sample(rep(mtry.vals, length.out = N), size = N),
-  min.node.size = sample(rep(min.node.size, length.out = N), size = N),
+  num.trees = sample(rep(num.trees.vals, length.out = TUNE_N), size = TUNE_N),
+  mtry      = sample(rep(mtry.vals, length.out = TUNE_N), size = TUNE_N),
+  min.node.size = sample(rep(min.node.size, length.out = TUNE_N), size = TUNE_N),
   cost = NA_real_
 )
 
