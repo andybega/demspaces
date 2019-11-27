@@ -61,8 +61,7 @@ ds_rf <- function(space, data, ...) {
 #' Based on tunerf results
 #' @keywords internal
 ds_rf_tuner <- function(x, y, ...) {
-  mtry_grid <- c(5, 10, 20, 30, 50, 75, 100)
-  #mtry_grid <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 100)
+  mtry_grid <- c(5, 7, 10, 15, 20, 25, 30, 40, 50, 60, 70, 85, 100)
 
   # cannot have mtry values greater than # of features
   mtry_grid <- mtry_grid[mtry_grid < ncol(x)]
