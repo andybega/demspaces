@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/andybega/demspaces/branch/master/graph/badge.svg)](https://codecov.io/gh/andybega/demspaces?branch=master)
 <!-- badges: end -->
 
-demspaces contains helper functions for the Closing Spaces project. See also the [andybega/closing-spaces](https://github.com/andybega/closing-spaces) repo. 
+demspaces contains helper functions for the Democratic Spaces Barometer project; see [andybega/democratic-spaces](https://github.com/andybega/democratic-spaces).
+
+*(Note to self: the private dev repo is at andybega/closing-spaces)*
 
 ## Installation
 
