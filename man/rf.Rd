@@ -17,7 +17,8 @@ rf(x, y, ...)
 Standardized interface for ...
 }
 \examples{
-credit_data <- recipes::credit_data
+library(modeldata)
+data(credit_data)
 credit_data <- credit_data[complete.cases(credit_data), ]
 
 mdl <- rf(credit_data[, setdiff(colnames(credit_data), "Status")],

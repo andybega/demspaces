@@ -9,7 +9,7 @@
 Functions to support the Democratic Spaces project.
 }
 \author{
-\strong{Maintainer}: Andreas Beger \email{adbeger@gmail.com} (0000-0003-1883-3169)
+\strong{Maintainer}: Andreas Beger \email{adbeger@gmail.com} (\href{https://orcid.org/0000-0003-1883-3169}{ORCID})
 
 }
 \keyword{internal}

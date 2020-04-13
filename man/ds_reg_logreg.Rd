@@ -27,8 +27,9 @@ preds <- predict(mdl, new_data = states)
 
 }
 \seealso{
-Other Other DS models: \code{\link{ds_logistic_reg_featx}},
-  \code{\link{ds_logistic_reg}}
+Other Other DS models: 
+\code{\link{ds_logistic_reg_featx}()},
+\code{\link{ds_logistic_reg}()}
 }
 \concept{Other DS models}
 \concept{ds_model}

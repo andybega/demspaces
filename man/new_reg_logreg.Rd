@@ -4,8 +4,7 @@
 \alias{new_reg_logreg}
 \title{Constructor}
 \usage{
-new_reg_logreg(model, y_classes, model_terms, hp_grid, loptim_grid,
-  tune_res)
+new_reg_logreg(model, y_classes, model_terms, hp_grid, loptim_grid, tune_res)
 }
 \description{
 Constructor

@@ -18,7 +18,8 @@ Standardized interface for logistic regression with a feature extraction
 step, e.g. PCA.
 }
 \examples{
-credit_data <- recipes::credit_data
+library(modeldata)
+data(credit_data)
 credit_data <- credit_data[complete.cases(credit_data), ]
 
 mdl <- logistic_reg_featx(
@@ -27,8 +28,9 @@ mdl <- logistic_reg_featx(
 
 }
 \seealso{
-Other Other base models: \code{\link{logistic_reg}},
-  \code{\link{reg_logreg}}
+Other Other base models: 
+\code{\link{logistic_reg}()},
+\code{\link{reg_logreg}()}
 }
 \concept{Other base models}
 \concept{base_model}

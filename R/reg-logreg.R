@@ -124,7 +124,8 @@ predict.ds_reg_logreg <- function(object, new_data, ...) {
 #'   the globally optimum alpha value is picked.
 #'
 #' @examples
-#' credit_data <- recipes::credit_data
+#' library(modeldata)
+#' data(credit_data)
 #' credit_data <- credit_data[complete.cases(credit_data), ]
 #'
 #' mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],

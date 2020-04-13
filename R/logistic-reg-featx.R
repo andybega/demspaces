@@ -95,7 +95,8 @@ predict.ds_logistic_reg_featx <- function(object, new_data, ...) {
 #' @param n_comp Number of components to keep.
 #'
 #' @examples
-#' credit_data <- recipes::credit_data
+#' library(modeldata)
+#' data(credit_data)
 #' credit_data <- credit_data[complete.cases(credit_data), ]
 #'
 #' mdl <- logistic_reg_featx(

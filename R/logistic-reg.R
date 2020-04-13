@@ -129,7 +129,8 @@ predict.ds_logistic_reg <- function(object, new_data, ...) {
 #' @param y Binary vector indicating outcome event.
 #'
 #' @examples
-#' credit_data <- recipes::credit_data
+#' library(modeldata)
+#' data(credit_data)
 #'
 #' mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
 #'                     credit_data$Status)

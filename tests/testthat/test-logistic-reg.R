@@ -1,7 +1,10 @@
 
+library(modeldata)
+data(credit_data)
+
 test_that("logist_reg works", {
 
-  credit_data <- recipes::credit_data
+
   expect_error(
     mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
                         credit_data$Status),
@@ -12,7 +15,6 @@ test_that("logist_reg works", {
 
 test_that("predict.logistic_reg works", {
 
-  credit_data <- recipes::credit_data
   mdl <- logistic_reg(credit_data[, setdiff(colnames(credit_data), "Status")],
                       credit_data$Status)
   expect_error(

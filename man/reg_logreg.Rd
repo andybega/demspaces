@@ -4,8 +4,7 @@
 \alias{reg_logreg}
 \title{Reguarized logistic regression}
 \usage{
-reg_logreg(x, y, folds = 5, alpha_n = 3, cost = "mse",
-  lambda = "1se")
+reg_logreg(x, y, folds = 5, alpha_n = 3, cost = "mse", lambda = "1se")
 }
 \arguments{
 \item{x}{Data frame with features.}
@@ -32,7 +31,8 @@ absolute minimum, but closest value within 1 SD of the minimum value). Then
 the globally optimum alpha value is picked.
 }
 \examples{
-credit_data <- recipes::credit_data
+library(modeldata)
+data(credit_data)
 credit_data <- credit_data[complete.cases(credit_data), ]
 
 mdl <- reg_logreg(credit_data[, setdiff(colnames(credit_data), "Status")],
@@ -47,8 +47,9 @@ head(preds)
 
 }
 \seealso{
-Other Other base models: \code{\link{logistic_reg_featx}},
-  \code{\link{logistic_reg}}
+Other Other base models: 
+\code{\link{logistic_reg_featx}()},
+\code{\link{logistic_reg}()}
 }
 \concept{Other base models}
 \concept{base_model}

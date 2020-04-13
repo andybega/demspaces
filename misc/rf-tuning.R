@@ -4,7 +4,8 @@ library("tidyr")
 library("dplyr")
 library("ggplot2")
 
-credit_data <- recipes::credit_data
+library(modeldata)
+data(credit_data)
 credit_data <- credit_data[complete.cases(credit_data), ]
 
 x = credit_data[, setdiff(colnames(credit_data), "Status")]
@@ -39,7 +40,8 @@ plot(tune_grid$min.node.size, tune_grid$cost)
 # How much does OOB error vary by iteration?
 # It makes no sense to pick min value when this could be error
 
-credit_data <- recipes::credit_data
+library(modeldata)
+data(credit_data)
 credit_data <- credit_data[complete.cases(credit_data), ]
 
 x = credit_data[, setdiff(colnames(credit_data), "Status")]

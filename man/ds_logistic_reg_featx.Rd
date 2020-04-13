@@ -28,8 +28,9 @@ head(preds)
 
 }
 \seealso{
-Other Other DS models: \code{\link{ds_logistic_reg}},
-  \code{\link{ds_reg_logreg}}
+Other Other DS models: 
+\code{\link{ds_logistic_reg}()},
+\code{\link{ds_reg_logreg}()}
 }
 \concept{Other DS models}
 \concept{ds_model}
