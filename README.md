@@ -11,6 +11,8 @@ status](https://travis-ci.com/andybega/demspaces.svg?branch=master)](https://tra
 coverage](https://codecov.io/gh/andybega/demspaces/branch/master/graph/badge.svg)](https://codecov.io/gh/andybega/demspaces?branch=master)
 <!-- badges: end -->
 
+_NOTE: This repo has moved to https://github.com/vdeminstitute/demspacesR_
+
 demspaces contains helper functions for the Democratic Spaces Barometer
 project; see
 [andybega/democratic-spaces](https://github.com/andybega/democratic-spaces).
